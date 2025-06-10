@@ -18,15 +18,23 @@ export default function BugReporter() {
     setError(null);
     setSuccess(false);
     try {
-      // TODO: Implement submission logic with OMR
-      console.log('Form submitted:', formData);
-      setSuccess(true);
-      setFormData({
-        description: '',
-        proof: '',
-        contractAddress: '',
-        severity: 'medium',
+      const res = await fetch('/api/submit-bug', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
       });
+      const data = await res.json();
+      if (data.success) {
+        setSuccess(true);
+        setFormData({
+          description: '',
+          proof: '',
+          contractAddress: '',
+          severity: 'medium',
+        });
+      } else {
+        setError('Failed to submit bug report. Please try again.');
+      }
     } catch (err) {
       setError('Failed to submit bug report. Please try again.');
     }

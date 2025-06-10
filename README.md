@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dead Drop Frontend
+
+A modern, privacy-preserving platform for reporting vulnerabilities in deployed smart contracts. Powered by advanced cryptography—Oblivious Message Retrieval (OMR) and PerfOMR—for end-to-end encrypted, metadata-private bug reporting.
+
+## Features
+- **End-to-end encrypted bug reporting**
+- **Metadata privacy**: Only the intended developer can decrypt their reports
+- **Modern, responsive UI** with dark/light mode
+- **Technical details and performance metrics**
+- **Open source and easy to integrate with custom OMR backends**
+
+## Tech Stack
+- [Next.js](https://nextjs.org/) (React, TypeScript)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [PerfOMR/OMR cryptography](https://github.com/ObliviousMessageRetrieval/ObliviousMessageRetrieval/tree/perfomr) (backend integration)
 
 ## Getting Started
 
-First, run the development server:
+1. **Clone the repo:**
+   ```sh
+   git clone https://github.com/cynthwangg/deaddropic3.git
+   cd deaddropic3
+   ```
+2. **Install dependencies:**
+   ```sh
+   npm install
+   ```
+3. **Run the development server:**
+   ```sh
+   npm run dev
+   ```
+4. **Open your browser:**
+   - [http://localhost:3000](http://localhost:3000)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Project Structure
+- `/` — Landing and bug report form
+- `/dashboard` — Developer dashboard for retrieving bug reports
+- `/about` — Project overview and trust signals
+- `/technical` — Technical details, algorithms, and performance
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technical Details
+- See [`/technical`](./src/app/technical/page.tsx) in the app
+- [PerfOMR ePrint Paper (IACR 2024/204)](https://eprint.iacr.org/2024/204)
+- [PerfOMR GitHub Repository](https://github.com/ObliviousMessageRetrieval/ObliviousMessageRetrieval/tree/perfomr)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Integration
+- See [`INTEGRATION_GUIDE.md`](./INTEGRATION_GUIDE.md) for how to connect this frontend to your OMR/TEE backend.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Credits
+- Inspired by [PerfOMR: Oblivious Message Retrieval with Reduced Communication and Computation](https://eprint.iacr.org/2024/204) by Zeyu Liu, Eran Tromer, Yunhao Wang
+- Frontend by Cynthia Wang and contributors
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+MIT (or specify your license)

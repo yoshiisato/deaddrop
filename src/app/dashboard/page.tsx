@@ -11,25 +11,14 @@ export default function DeveloperDashboard() {
   const handleConnectWallet = async () => {
     setIsLoading(true);
     setScanStatus('scanning');
-    // TODO: Implement wallet connection and OMR retrieval logic
     try {
-      // Simulated API call
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      setBugReports([
-        {
-          id: 1,
-          contractAddress: '0x1234...5678',
-          severity: 'high',
-          description: 'Sample bug report',
-          proof: 'Sample proof',
-          timestamp: new Date().toISOString(),
-          digest: '0xabc123...def456',
-        },
-      ]);
+      const res = await fetch('/api/get-bugs?wallet=' + encodeURIComponent(walletAddress));
+      const data = await res.json();
+      setBugReports(data);
       setScanStatus('done');
     } catch (error) {
       setScanStatus('idle');
-      console.error('Error fetching bug reports:', error);
+      setBugReports([]);
     } finally {
       setIsLoading(false);
     }
