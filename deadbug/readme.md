@@ -1,0 +1,1 @@
+<!-- Rust project that will contain all the entity code -->
