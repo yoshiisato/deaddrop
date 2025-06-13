@@ -56,7 +56,7 @@ impl Receiver {
         println!("Clue Key: {:?}", clue_key);
     }
 
-    pub fn decode_digest(&self, digest: &Vec<Payload>) {
+    pub fn decode_digest(&mut self, digest: &Vec<Payload>) {
         
         let dec_payload = decode(
             &self.public_params,
@@ -67,6 +67,14 @@ impl Receiver {
         match dec_payload {
             rust_omr::types::DecodeResult::PayloadList(decoded) => {
                 println!("Decoded Payloads: {:?}", decoded);
+
+            //use a queue to do this 
+            for payload in decoded.iter() {
+                self.decoded_paylods_queue.push_back(payload.to_vec());
+            }
+
+            print!("Decoded Payloads added to the internal queue!");
+            
             }
             _ => {
                 println!("Decoding failed or overflow occurred.");
@@ -76,8 +84,7 @@ impl Receiver {
 
         // Add the decoded payloads to the receiver's state so that we can later retrieve the info to query the DB 
 
-        //use a queue to do this 
-        // self.decoded_paylods_queue.push_back(dec_payload);
+        
         
 
         // 

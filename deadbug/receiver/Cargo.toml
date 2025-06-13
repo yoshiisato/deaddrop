@@ -2,14 +2,6 @@
 name = "deadbug_receiver"
 version = "0.1.0"
 edition = "2021"
-build = "./build.rs"
 
 [dependencies]
-tonic = "0.8"
-prost = "0.12"
-prost-types = "0.12"
 rust_omr = {path = "../rust_omr", version = "0.1.0"}
-
-[build-dependencies]
-prost-build = "0.12"
-tonic-build = "0.8"
