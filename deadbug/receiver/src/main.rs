@@ -67,12 +67,12 @@ fn handle_detection_key(receiver: &mut Receiver) {
 
     // let temp_detection_key: PKDetect;
 
-    let input: String = Input::new()
-        .with_prompt("Enter anything and press Enter")
-        .interact_text()
-        .expect("failed to read line");
+    // let input: String = Input::new()
+    //     .with_prompt("Enter anything and press Enter")
+    //     .interact_text()
+    //     .expect("failed to read line");
 
-    println!("You typed: {input}\n");
+    // println!("You typed: {input}\n");
 
     // receiver.public_key.pk_detect = input.clone();
     let temp = receiver.public_key.pk_detect.clone(); 
