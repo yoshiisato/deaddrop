@@ -4,3 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+rust_omr = {path = "../rust_omr", version = "0.1.0"}
+utils = {path = "../utils", version = "0.1.0"}

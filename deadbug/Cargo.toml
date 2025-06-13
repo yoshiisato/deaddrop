@@ -4,5 +4,6 @@ members = [
     "detector",
     "receiver",
     "server",
-    "submitter"
+    "submitter",
+    "utils",
 ]
