@@ -6,11 +6,20 @@ fn main() {
         // Create an instance of the receiver
     let receiver = Receiver::new();
 
-    // Example usage of the receiver methods
-    // let digest = receiver.get_digest(&[0; 32]);
-    // receiver.decode_digest(&digest);
-    // let bug = receiver.fetch_bug_from_storage(&db_identifier);
-    // receiver.decrypt_bug_file(&bug);
+    receiver.post_info_for_submitters();
+
+    //At start up we create the receiver and all the info
+    // and we print the info for the frontend
+
+    // Then we have a menu with multiple options: 
+
+    // 1. Get detection key to request the digest (compress digest of pertinent messages, in our case encrypted symmetric keys for retrieving later bug reports)
+
+    // 2. Decode the digest to get the info to retrieve the bug reports (index to query the database)
+
+    // 3. Give the id for the file to retrieve and parse an HEX string of the CXTX to decrypt the bug report to get the bug report
+
+
 
     println!("Receiver is running...");
 }
