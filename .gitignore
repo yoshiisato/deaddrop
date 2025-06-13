@@ -40,7 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# # All the tartget directories
-# deadbug/target
-# deadbug/rust_omr/target
-# deadbug/Cargo.lock
+# All the target directories
+deadbug/target
+deadbug/rust_omr/target
+deadbug/Cargo.lock
