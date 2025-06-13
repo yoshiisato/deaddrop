@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package common_proto;
+
+message Bug {
+    string identifier = 1;
+    bytes file = 2;
+}
+
+message Digest {
+    bytes digest = 1;
+}
+
+// Here we can add the specification of our types
