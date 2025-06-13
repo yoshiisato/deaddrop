@@ -20,8 +20,9 @@ fn main() {
     // 1. Get detection key to request the digest (compress digest of pertinent messages, in our case encrypted symmetric keys for retrieving later bug reports)
 
     // 2. Decode the digest to get the info to retrieve the bug reports (index to query the database)
+    
 
-    // 3. Give the id for the file to retrieve and parse an HEX string of the CXTX to decrypt the bug report to get the bug report
+    // 3. Give the id for the file to retrieve and parse an HEX string of the CXTX to decrypt the bug report to get the bug report 
 
 
 
