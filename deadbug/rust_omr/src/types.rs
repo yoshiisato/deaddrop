@@ -1,6 +1,7 @@
 pub type Payload = Vec<u8>; // x ∈ {0,1}^P
 pub type Clue = Vec<u8>;
-pub type BulletinBoard = Vec<(Clue, Payload)>;
+pub type OMRItem = (Clue, Payload); // (clue, payload)
+pub type BulletinBoard = Vec<OMRItem>;
 
 pub type PKDetect = Vec<u8>; // Public key for detection
 pub type PKClue = Vec<u8>; // Public key for clue generation
