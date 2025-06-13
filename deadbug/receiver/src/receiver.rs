@@ -81,43 +81,38 @@ impl Receiver {
                 return;
             }
         }
-
-        // Add the decoded payloads to the receiver's state so that we can later retrieve the info to query the DB 
-
-        
-        
-
-        // 
-
-
-        unimplemented!();
-        println!("Decoding the digest...");
     }
 
+    // Method to extact one item from the queue 
+    // This will give the id to fetch the file
 
-    // Method to receive data
-    // pub fn get_digest(&self, detection_pk: &[u8]) -> Digest {
-    //     // Logic to receive data
+    pub fn get_next_decoded_payload(&mut self) -> Option<Payload> {
+        if !self.decoded_paylods_queue.is_empty() {
+            let decoded_payload = self.decoded_paylods_queue.pop_front();
+            decoded_payload
+        }else{
+            println!("No decoded payloads available.");
+            return None;
+        }
+    }
 
-    //     unimplemented!();
-    //     println!("Retrieving digest of pertinent message form the server...");
-    // }
+    // Method to extract id and symmetric key from the decoded payload (popped from the queue by previous function)
+    pub fn extract_info_from_decoded_payload(&self, payload: &Payload) -> (String, String) {
+        // Assuming the payload contains the id and enc_hex_file in a specific format
+        // For now, we just return dummy values
+        let id = "dummy_id".to_string();
+        let symmetric_key = "dummy_enc_hex_file".to_string();
 
-    // pub fn decode_digest(&self, Digest: &Digest) {
-    //     // Logic to decode the digest   
-    //     unimplemented!();            
-    //     println!("Decoding the digest...");
-    // }
+        (id, symmetric_key)
+    }
 
-    // pub fn fetch_bug_from_storage(&self, id: &Bug) -> Bug{
-    //     unimplemented!();
-    //     // Logic to fetch the bug from storage
-    //     println!("Fetching bug from storage...");
-    // }
+    pub fn decrypt_bug_report(&self, enc_hex_file: &str, symmetric_key: &str) -> String {
+        // Logic to decrypt the bug report using the symmetric key
+        // For now, we just return a dummy decrypted report
+        let decrypted_report = format!("Decrypted report for {} with key {}", enc_hex_file, symmetric_key);
+        decrypted_report
+    }
 
-    // pub fn decrypt_bug_file(&self, bug_file: &Bug) {
-    //     unimplemented!();
-    //     // Logic to decrypt the bug file
-    //     println!("Decrypting the bug file...");
-    // }
+    
+
 }
