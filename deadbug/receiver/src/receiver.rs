@@ -9,7 +9,7 @@ use crate::types::{BugInfo, EncKeys};
 pub struct Receiver {
     // Fields for the receiver
     public_params: PublicParams,
-    public_key: PublicKey,
+    pub public_key: PublicKey,
     secret_key: SecretKey,
     bug_info: BugInfo,
     enc_keys: EncKeys,
