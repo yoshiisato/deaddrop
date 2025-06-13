@@ -105,6 +105,8 @@ fn handle_process_id(receiver: &mut Receiver) {
 
         let (id, symmetric_key) = receiver.extract_info_from_decoded_payload(&payload);
 
+        println!("We have an id=[{id}] and a symmetric_key=[{symmetric_key}]");
+
         let ciphertext: String = Input::new()
             .with_prompt("Enter the ciphertext and press Enter")
             .interact_text()
@@ -114,7 +116,7 @@ fn handle_process_id(receiver: &mut Receiver) {
 
         let plaintext = receiver.decrypt_bug_report(&ciphertext, &symmetric_key);
 
-        println!("Resulting plaintext: {ciphertext}\n");
+        println!("Resulting plaintext: {plaintext}\n");
     } else {
         println!("Nothing was popped from queue!");
     }
