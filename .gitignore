@@ -40,6 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# python
+__pycache__
+*.db
+
 # All the target directories
 deadbug/target
 deadbug/rust_omr/target
