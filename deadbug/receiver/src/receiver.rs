@@ -3,12 +3,12 @@ use std::collections::VecDeque;
 use rust_omr::receiver::decode;
 use rust_omr::setup::{gen_param, keygen};
 use rust_omr::types::{encode_pk_clue_to_hex, Payload, PublicKey, PublicParams, SecretKey};
-use submitter::submitter::Submitter;
 
 use crate::types::{BugInfo, BugMetadata, BugStatus, EncKeys, ReceiverError};
 
 use utils::deserialize_omr_payload;
 
+use log::{info, warn, error, debug, trace};
 
 pub struct Receiver {
     // Fields for the receiver
@@ -48,14 +48,14 @@ impl Receiver {
     pub fn post_info_for_submitters(&self) {
         // Logic to post the bug information for submitters
 
-        println!("Bug Address: {}", self.bug_info.addr);
-        println!("Bug Rules: {}", self.bug_info.rules);
+        info!("Bug Address: {}", self.bug_info.addr);
+        info!("Bug Rules: {}", self.bug_info.rules);
 
         let clue_key = self.public_key.pk_clue.clone();
         let enc_key = self.enc_keys.pk_enc.clone();
 
-        println!("Encryption Key: {:?}", enc_key);
-        println!("Clue Key: {}", encode_pk_clue_to_hex(&clue_key));
+        info!("Encryption Key: {:?}", enc_key);
+        info!("Clue Key: {}", encode_pk_clue_to_hex(&clue_key));
     }
 
     pub fn decode_digest(&mut self, digest: &Vec<Payload>) -> Result<(), ReceiverError> {
@@ -69,11 +69,11 @@ impl Receiver {
                     self.decoded_paylods_queue.push_back(payload.to_vec());
                 }
 
-                println!("Decoded Payloads added to the internal queue!");
+                info!("Decoded Payloads added to the internal queue!");
                 Ok(())
             }
             _ => {
-                println!("Decoding failed or overflow occurred.");
+                info!("Decoding failed or overflow occurred.");
                 return Err(ReceiverError(
                     "Decoding failed or overflow occurred.".to_string(),
                 ));
@@ -101,12 +101,12 @@ impl Receiver {
                         let identifier = String::from_utf8(identifier);
 
                         if identifier.is_err() {
-                            println!("Error converting identifier to string: {}", identifier.err().unwrap());
+                            error!("Error converting identifier to string: {}", identifier.err().unwrap());
                             return Err(ReceiverError("Failed to convert identifier to string".to_string()));
                         }
 
                         let identifier = identifier.unwrap();
-                        println!("Extracted ID: {}", identifier);
+                        info!("Extracted ID: {}", identifier);
 
                         return Ok(Some(BugMetadata {
                             bug_id: identifier,
@@ -117,17 +117,17 @@ impl Receiver {
                         }));
                     }
                     Err(e) => {
-                        println!("Error deserializing payload: {}", e);
+                        error!("Error deserializing payload: {}", e);
                         return Err(ReceiverError(format!("Failed to deserialize payload: {}", e)));
                     }
                 }
                 
             } else {
-                println!("No payloads available in the queue.");
+                warn!("No payloads available in the queue.");
                 return Ok(None);
             }
         }else {
-            println!("No decoded payloads available.");
+            warn!("No decoded payloads available.");
             return Ok(None);
         }
     }
@@ -165,6 +165,7 @@ impl Receiver {
 #[cfg(test)]
 mod tests {
     use rust_omr::types::{decode_payloads, encode_payloads, OMRItem};
+    use submitter::submitter::Submitter;
     use utils::db::DBEntry;
 
     use super::*;
