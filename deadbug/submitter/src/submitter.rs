@@ -8,6 +8,9 @@ use utils::hashing::hash_to_string;
 use utils::hashing::hash_to_bytes;
 use utils::aes::encrypt;
 use utils::pke::EncPublicKey;
+use std::process::Command;
+use std::io;
+
 
 
 pub struct Submitter {
@@ -18,6 +21,51 @@ fn check_bug(bug: &[u8]) -> bool {
     // Dummy check for bug correctness
     // In a real scenario, this would involve checking a database or some other source
     true
+}
+
+/// Run `run_test.sh` script to check whether the given attack violates invariants provided
+/// by the bug receiver.
+/// 
+/// This function will panic if `run_test.sh` cannot be spawned, or the script exits with code
+/// other than 0 or 1.
+///
+fn check_bug_impl(
+    contract_addr: &str,
+    block_num: u32,
+    bug_filepath: &str,
+    inv_filepath: &str,
+) -> bool {
+    let output = Command::new("./src/run_test.sh")
+        .arg(contract_addr)
+        .arg(block_num.to_string())
+        .arg(bug_filepath)
+        .arg(inv_filepath)
+        .output()
+        .expect("failed to spawn run_test.sh");
+
+    let code = output.status.code().unwrap_or(-1);
+    let stdout = String::from_utf8_lossy(&output.stdout)
+        .trim()
+        .to_string();
+    let stderr = String::from_utf8_lossy(&output.stderr)
+        .trim()
+        .to_string();
+
+    match (code, stdout.as_str()) {
+        (0, s) if s.eq_ignore_ascii_case("success") => {
+            false
+        }
+        (1, s) if s.eq_ignore_ascii_case("fail") => {
+            // bug violates invariants
+            true
+        }
+        (other, s) => {
+            panic!(
+                "run_test.sh returned unexpected code {} with stdout={:?} stderr={:?}",
+                other, s, stderr
+            );
+        }
+    }
 }
 
 impl Submitter {
