@@ -8,7 +8,7 @@ use crate::types::{BugInfo, BugMetadata, BugStatus, EncKeys, ReceiverError};
 
 use utils::deserialize_omr_payload;
 
-use log::{info, warn, error, debug, trace};
+use log::{debug, error, info, trace, warn};
 
 pub struct Receiver {
     // Fields for the receiver
@@ -100,8 +100,13 @@ impl Receiver {
                         let identifier = String::from_utf8(identifier);
 
                         if identifier.is_err() {
-                            error!("Error converting identifier to string: {}", identifier.err().unwrap());
-                            return Err(ReceiverError("Failed to convert identifier to string".to_string()));
+                            error!(
+                                "Error converting identifier to string: {}",
+                                identifier.err().unwrap()
+                            );
+                            return Err(ReceiverError(
+                                "Failed to convert identifier to string".to_string(),
+                            ));
                         }
 
                         let identifier = identifier.unwrap();
@@ -117,14 +122,17 @@ impl Receiver {
                     }
                     Err(e) => {
                         error!("Error deserializing payload: {}", e);
-                        return Err(ReceiverError(format!("Failed to deserialize payload: {}", e)));
+                        return Err(ReceiverError(format!(
+                            "Failed to deserialize payload: {}",
+                            e
+                        )));
                     }
                 }
             } else {
                 warn!("No payloads available in the queue.");
                 return Ok(None);
             }
-        }else {
+        } else {
             warn!("No decoded payloads available.");
             return Ok(None);
         }

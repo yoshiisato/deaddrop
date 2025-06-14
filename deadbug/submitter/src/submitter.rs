@@ -10,7 +10,7 @@ use utils::hashing::hash_to_bytes;
 use utils::hashing::hash_to_string;
 use utils::pke::EncPublicKey;
 use utils::{self, serialize_omr_payload};
-
+use utils::db::SubmittedData;
 pub struct Submitter {
     public_params: PublicParams,
 }
