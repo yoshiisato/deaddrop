@@ -3,13 +3,6 @@ pub type Clue = Vec<u8>;
 pub type OMRItem = (Clue, Payload); // (clue, payload)
 pub type BulletinBoard = Vec<OMRItem>;
 
-// This need to be encrypted with the public key
-#[derive(Clone)]
-pub struct OMRPayload {
-    pub identifier: String,
-    pub key: String,
-}
-
 
 pub type PKDetect = Vec<u8>; // Public key for detection
 pub type PKClue = Vec<u8>; // Public key for clue generation
