@@ -1,8 +1,6 @@
-<<<<<<< HEAD
 use crate::types::{PublicKey, PublicParams, SecretKey};
 use rand::rngs::OsRng;
 use rand::RngCore;
-=======
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
 use std::path::Path;
@@ -12,7 +10,6 @@ use serde::{Serialize, Deserialize};
 const KEYS_FILE_LOCATION: &str = "/tmp/funkeys.txt";
 
 use crate::types::*;
->>>>>>> 13c8f4c (Made changes to save generated keys to temporary files in /tmp directory)
 
 pub fn gen_param(lambda: usize, epsilon_p: f64, epsilon_n: f64) -> PublicParams {
     PublicParams {
@@ -22,17 +19,16 @@ pub fn gen_param(lambda: usize, epsilon_p: f64, epsilon_n: f64) -> PublicParams 
     }
 }
 
-<<<<<<< HEAD
 fn generate_random_32_bytes() -> [u8; 32] {
     let mut bytes = [0u8; 32];
     OsRng.fill_bytes(&mut bytes);
     bytes
-=======
+}
+
 #[derive(Serialize, Deserialize)]
 struct KeyPair {
     sk: SecretKey,
     pk: PublicKey,
->>>>>>> 13c8f4c (Made changes to save generated keys to temporary files in /tmp directory)
 }
 
 pub fn keygen(_pp: &PublicParams) -> (SecretKey, PublicKey) {

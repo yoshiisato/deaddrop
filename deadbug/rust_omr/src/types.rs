@@ -27,21 +27,12 @@ pub type PKClue = Vec<u8>; // Public key for clue generation
 //     pub epsilon_n: f64,
 // }
 
-<<<<<<< HEAD
-#[derive(Clone)]
-pub struct PublicKey {
-    pub pk_clue: PKClue,
-    pub pk_detect: PKDetect,
-}
-
-=======
 // #[derive(Clone)]
 // pub struct PublicKey {
 //     pub pk_clue: PKClue,
 //     pub pk_detect: PKDetect,
 // }
     
->>>>>>> 13c8f4c (Made changes to save generated keys to temporary files in /tmp directory)
 pub fn encode_pk_detect_to_hex(pk_detect: &PKDetect) -> String {
     hex::encode(pk_detect)
 }
@@ -55,15 +46,9 @@ pub fn decode_pk_clue_from_hex(hex_str: &str) -> Result<PKClue, String> {
     hex::decode(hex_str).map_err(|e| e.to_string())
 }
 
-<<<<<<< HEAD
-#[derive(Clone)]
-pub struct SecretKey {
-    pub sk_bytes: Vec<u8>,
-=======
 // ylitchev: encode and decode sk to/from hex as is done with the public keys
 pub fn encode_sk_to_hex(sk: &SecretKey) -> String {
     hex::encode(&sk.sk_bytes)
->>>>>>> 13c8f4c (Made changes to save generated keys to temporary files in /tmp directory)
 }
 
 pub fn decode_sk_from_hex(hex_str: &str) -> Result<SecretKey, String> {
