@@ -17,25 +17,25 @@
         <div class="col-md-6 col-lg-4">
           <div class="card h-100 shadow-sm">
             <div class="card-body d-flex flex-column">
-              <p class="card-text mb-1"><strong>PK Clue:</strong> {{ e.pk_clue }}</p>
+              <p class="card-text mb-1"><strong>Clue Key:</strong> {{ e.pk_clue }}</p>
+              <p class="card-text mb-1"><strong>Encryption Key:</strong> {{ e.pk_encryption }}</p>
               <p class="card-text mb-1"><strong>Smart contract addr:</strong> {{ e.sc_addr }}</p>
-              <p class="card-text mb-3"><strong>Constraints:</strong> {{ e.constraints }}</p>
+              <p class="card-text mb-3"><strong>Invariants:</strong> {{ e.constraints }}</p>
               <p class="mt-auto text-muted small">
                 {{ e.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
               </p>
-
-              <!-- NEW: Submit Bug button -->
-              <a
-                href="{{ url_for('submit_bug', entry_id=e.id) }}"
-                class="btn btn-warning mt-3"
-              >
-                Submit a Bug
-              </a>
             </div>
           </div>
         </div>
       {% endfor %}
     </div>
+      <h2 class="mt-4">Found a bug?</h2>
+      <a
+        href="{{ url_for('submit_bug') }}"
+        class="btn btn-warning mt-3"
+      >
+        Submit a Bug
+      </a>
   {% else %}
     <div class="alert alert-info">
       No entries yet. <a href="{{ url_for('register') }}" class="alert-link">Add one now</a>.

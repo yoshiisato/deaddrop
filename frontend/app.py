@@ -26,6 +26,7 @@ def register():
     if request.method == 'POST':
         e = Entry(
             pk_clue=request.form['pk_clue'],
+            pk_encryption=request.form['pk_encryption'],
             sc_addr=request.form['sc_addr'],
             constraints=request.form['constraints']
         )
@@ -35,10 +36,8 @@ def register():
         return redirect(url_for('show_list'))
     return render_template('register.html', current_year=datetime.utcnow().year)
 
-@app.route('/submit_bug/<int:entry_id>', methods=['GET', 'POST'])
-def submit_bug(entry_id):
-    entry = Entry.query.get_or_404(entry_id)
-
+@app.route('/submit_bug', methods=['GET', 'POST'])
+def submit_bug():
     if request.method == 'POST':
         file = request.files.get('bugfile')
         if not file or not file.filename.lower().endswith('.json'):
@@ -55,7 +54,6 @@ def submit_bug(entry_id):
                     flash("JSON must include keys: " + ", ".join(required), "danger")
                 else:
                     bug = BugReport(
-                        entry_id   = entry.id,
                         bugid      = data['bugid'],
                         ciphertext = data['ciphertext'],
                         omr_payload= json.dumps(data['omr_payload']),
@@ -78,7 +76,6 @@ def submit_bug(entry_id):
 
     return render_template(
         'submit_bug.html',
-        entry=entry,
         example_json=example_json,
         current_year=datetime.utcnow().year
     )
@@ -87,30 +84,36 @@ def submit_bug(entry_id):
 def bug_lookup():
     bugs = None
     pk_detect = ""
+    bug_id = ""
+    found_bug = None
 
     if request.method == 'POST':
-        pk_detect = request.form.get('pk_detect', '').strip()
+        form_type = request.form.get('form_type')
 
-        if pk_detect == "*":
-            # show all bugs (debug mode)
-            bugs = BugReport.query.order_by(BugReport.timestamp.desc()).all()
-        else:
-            # Placeholder: simulate tool loading data
-            # Replace this with subprocess output or file read later
-            bugs = [
-                {
-                    "bugid": "BR-1234",
-                    "omr_clue": "some-clue",
-                    "description": "0xdeadbeef…"
-                },
-                {
-                    "bugid": "BR-5678",
-                    "omr_clue": "other-clue",
-                    "description": "0xbeefdead…"
-                }
-            ]
+        if form_type == "detect_lookup":
+            pk_detect = request.form.get('pk_detect', '').strip()
+
+            if pk_detect == "*":
+                # Show all bugs (debug mode)
+                bugs = BugReport.query.order_by(BugReport.timestamp.desc()).all()
+            else:
+                # Simulated response from tool (replace with subprocess output later)
+                bugs = []
+
+        elif form_type == "bug_id_lookup":
+            bug_id = request.form.get('bug_id', '').strip()
+            if bug_id:
+                found_bug = BugReport.query.filter_by(bugid=bug_id).first()
 
     return render_template("bug_lookup.html",
                            pk_detect=pk_detect,
+                           bug_id=bug_id,
                            bugs=bugs,
+                           found_bug=found_bug,
                            current_year=datetime.utcnow().year)
+
+
+@app.route('/bug_reports')
+def all_bug_reports():
+    all_bugs = BugReport.query.order_by(BugReport.timestamp.desc()).all()
+    return render_template("all_bug_reports.html", bugs=all_bugs)

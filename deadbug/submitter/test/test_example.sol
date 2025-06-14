@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 
 import "forge-std/Test.sol";
-import "../attack.sol";
+import "../bug_report.sol";
 
 interface DAO {
     function totalSupply() external view returns (uint256);

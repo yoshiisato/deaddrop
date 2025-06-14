@@ -63,12 +63,11 @@ fn main() {
     }
 }
 
-
 // ylitchev: print out the stored detection key
 fn handle_detection_key(receiver: &mut Receiver) {
     info!("Option 1 selected: Get detection key");
 
-    let temp = receiver.public_key.pk_detect.clone(); 
+    let temp = receiver.public_key.pk_detect.clone();
     let pk_detect_hex = encode_pk_detect_to_hex(&temp);
     info!("Detection key set to {:?}", pk_detect_hex);
     
@@ -103,7 +102,6 @@ fn handle_decode_digest(receiver: &mut Receiver) {
     receiver.decode_digest(&decoded_digest);
 }
 
-
 // ylitchev: Pop the most recent payload from the queue, process it
 //           in order to receive an id and symmetric key. Wait for a
 //           ciphertext, when given, decrypt it
@@ -112,7 +110,7 @@ fn handle_process_id(receiver: &mut Receiver) {
     let popped_element = receiver.get_next_decoded_payload();
     match popped_element {
         Ok(element) => {
-             if element.is_some() {
+            if element.is_some() {
                 // There is an element, unwrap and parse it
                 let payload = element.unwrap();
 
@@ -129,7 +127,7 @@ fn handle_process_id(receiver: &mut Receiver) {
                 info!("You typed: {ciphertext}\n");
 
                 // Decode the ciphertext, get the plaintext and print it
-                let plaintext = receiver.decrypt_bug_report(&ciphertext, symmetric_key);    
+                let plaintext = receiver.decrypt_bug_report(&ciphertext, symmetric_key);
 
                 info!("Resulting plaintext: {:?}", plaintext);
             } else {
@@ -141,9 +139,7 @@ fn handle_process_id(receiver: &mut Receiver) {
             return; // Exit if there's an error
         }
     }
-   
 }
-
 
 // ylitchev: Dummy template function to handle command-line inputs
 /// Helper: prompt for arbitrary user input, then echo it with a custom banner.
@@ -156,4 +152,3 @@ fn handle_option(banner: &str) {
 
     println!("You typed: {input}\n");
 }
-
