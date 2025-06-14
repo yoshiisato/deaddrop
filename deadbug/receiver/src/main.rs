@@ -4,10 +4,9 @@ use dialoguer::{theme::ColorfulTheme, Input, Select};
 // ylitchev: to process payloads
 use rust_omr::types::{decode_payloads, encode_pk_detect_to_hex, Payload};
 
-use log::{info, warn, error, debug, trace};
+use log::{debug, error, info, trace, warn};
 
 fn main() {
-
     env_logger::init();
 
     // Create an instance of the receiver
@@ -70,7 +69,6 @@ fn handle_detection_key(receiver: &mut Receiver) {
     let temp = receiver.public_key.pk_detect.clone();
     let pk_detect_hex = encode_pk_detect_to_hex(&temp);
     info!("Detection key set to {:?}", pk_detect_hex);
-    
 }
 
 fn handle_print(receiver: &mut Receiver) {

@@ -49,7 +49,7 @@ pub fn keygen(_pp: &PublicParams) -> (SecretKey, PublicKey) {
     };
     let random_bytes = generate_random_32_bytes();
     // For simplicity, use the same random bytes for both public keys
-    
+
     let pk = PublicKey {
         pk_clue: random_bytes.to_vec(),
         pk_detect: random_bytes.to_vec(),
