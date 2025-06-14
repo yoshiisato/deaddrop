@@ -1,4 +1,6 @@
 use crate::types::{PublicKey, PublicParams, SecretKey};
+use rand::rngs::OsRng;
+use rand::RngCore;
 
 pub fn gen_param(lambda: usize, epsilon_p: f64, epsilon_n: f64) -> PublicParams {
     PublicParams {
