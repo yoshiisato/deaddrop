@@ -87,30 +87,30 @@ def submit_bug(entry_id):
 def bug_lookup():
     bugs = None
     pk_detect = ""
+    bug_id = ""
+    found_bug = None
 
     if request.method == 'POST':
-        pk_detect = request.form.get('pk_detect', '').strip()
+        form_type = request.form.get('form_type')
 
-        if pk_detect == "*":
-            # show all bugs (debug mode)
-            bugs = BugReport.query.order_by(BugReport.timestamp.desc()).all()
-        else:
-            # Placeholder: simulate tool loading data
-            # Replace this with subprocess output or file read later
-            bugs = [
-                {
-                    "bugid": "BR-1234",
-                    "omr_clue": "some-clue",
-                    "description": "0xdeadbeef…"
-                },
-                {
-                    "bugid": "BR-5678",
-                    "omr_clue": "other-clue",
-                    "description": "0xbeefdead…"
-                }
-            ]
+        if form_type == "detect_lookup":
+            pk_detect = request.form.get('pk_detect', '').strip()
+
+            if pk_detect == "*":
+                # Show all bugs (debug mode)
+                bugs = BugReport.query.order_by(BugReport.timestamp.desc()).all()
+            else:
+                # Simulated response from tool (replace with subprocess output later)
+                bugs = []
+
+        elif form_type == "bug_id_lookup":
+            bug_id = request.form.get('bug_id', '').strip()
+            if bug_id:
+                found_bug = BugReport.query.filter_by(bugid=bug_id).first()
 
     return render_template("bug_lookup.html",
                            pk_detect=pk_detect,
+                           bug_id=bug_id,
                            bugs=bugs,
+                           found_bug=found_bug,
                            current_year=datetime.utcnow().year)
