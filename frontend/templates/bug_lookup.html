@@ -24,6 +24,12 @@
             <button type="submit" class="btn btn-primary mt-3">Search</button>
           </form>
 
+          {% if tool_error %}
+            <div class="alert alert-danger">
+              {{ tool_error }}
+            </div>
+          {% endif %}
+
           {% if bugs %}
             {% if pk_detect == "*" %}
               <div class="alert alert-warning">
