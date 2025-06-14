@@ -97,8 +97,10 @@ def bug_lookup():
                 bugs = BugReport.query.order_by(BugReport.timestamp.desc()).all()
             elif pk_detect:
                 import os
-                filepath=os.path.abspath("/tmp/omr_data.json")
-                detector_path="detector"
+                filepath = os.path.abspath("/tmp/omr_data.json")
+                detector_path = os.getenv("DETECTOR_PATH", None)
+                if not detector_path:
+                    raise Exception("detector path env not set")
                 reports = BugReport.query.all()
                 omr_list = [
                     {
