@@ -85,7 +85,7 @@ def bug_lookup():
     bugs = None
     pk_detect = ""
     bug_id = ""
-    found_bug = None
+    tool_error = None
 
     if request.method == 'POST':
         form_type = request.form.get('form_type')
@@ -94,22 +94,63 @@ def bug_lookup():
             pk_detect = request.form.get('pk_detect', '').strip()
 
             if pk_detect == "*":
-                # Show all bugs (debug mode)
                 bugs = BugReport.query.order_by(BugReport.timestamp.desc()).all()
-            else:
-                # Simulated response from tool (replace with subprocess output later)
-                bugs = []
+            elif pk_detect:
+                import os
+                filepath = os.path.abspath("/tmp/omr_data.json")
+                detector_path = os.getenv("DETECTOR_PATH", None)
+                if not detector_path:
+                    raise Exception("detector path env not set")
+                reports = BugReport.query.all()
+                omr_list = [
+                    {
+                        "clue": report.omr_clue,
+                        "payload": report.omr_payload
+                    }
+                    for report in reports
+                    if report.omr_clue and report.omr_payload
+                ]
 
-        elif form_type == "bug_id_lookup":
-            bug_id = request.form.get('bug_id', '').strip()
-            if bug_id:
-                found_bug = BugReport.query.filter_by(bugid=bug_id).first()
+                data = { "omr": omr_list }
+
+                with open(filepath, "w") as f:
+                    json.dump(data, f, indent=2)
+
+                print(f"✅ Exported {len(omr_list)} entries to {filepath}")
+
+                try:
+                    import subprocess
+                    cmd = [detector_path, pk_detect, filepath]
+                    print("🔧 Running command:", " ".join(cmd))
+
+                    result = subprocess.run(
+                        cmd,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        check=True,
+                        text=True
+                    )
+                    raw_bugs = json.loads(result.stdout)
+                    bugs = []
+                    for b in raw_bugs:
+                        bugs.append({
+                            "bugid": b.get("bugid"),
+                            "ciphertext": b.get("decryption_key"),
+                            "timestamp": datetime.fromisoformat(b.get("timestamp"))
+                        })
+                except FileNotFoundError:
+                    tool_error = "❌ detect_tool not found. Please make sure it is compiled and located in the project directory."
+                except subprocess.CalledProcessError as e:
+                    tool_error = f"❌ detect_tool failed with exit code {e.returncode}: {e.stderr.strip()}"
+                except json.JSONDecodeError as e:
+                    tool_error = f"❌ Failed to parse JSON output from tool: {e}"
+                print(tool_error)
 
     return render_template("bug_lookup.html",
                            pk_detect=pk_detect,
                            bug_id=bug_id,
                            bugs=bugs,
-                           found_bug=found_bug,
+                           tool_error=tool_error,
                            current_year=datetime.utcnow().year)
 
 

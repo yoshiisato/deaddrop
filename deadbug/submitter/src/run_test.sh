@@ -8,7 +8,7 @@ inv="$4"
 
 mkdir -p bin
 
-forge init bin/bug-verify &> /dev/null
+forge init --no-git bin/bug-verify &> /dev/null
 
 # move bug and inv file to test folder
 dest="./bin/bug-verify/test"
@@ -21,6 +21,7 @@ cd bin/bug-verify
 (
   export TARGET="$addr"
   export MAINNET_RPC_URL="https://mainnet.infura.io/v3/27ce2d06142643c28dc2d477400fd430"
+  export block_num=$block_num
 
   JSON_OUT="$(forge test test/inv/* \
     --fork-url "$MAINNET_RPC_URL" \
