@@ -1,6 +1,8 @@
 use deadbug_detector::detector::Detector;
 use std::env;
 
+use rust_omr::types::encode_payloads;
+
 
 fn main() {
     println!("Begin detection!");
@@ -23,7 +25,7 @@ fn main() {
     let detector = Detector::new(input.as_bytes(),path, k_bound);
     println!("Detection complete!");
     detector.get_payloads();
-    println!("Payloads: {:?}", detector.get_payloads());
-    
+    println!("Payloads: {:?}", encode_payloads(detector.get_payloads()));
+
 }
 
