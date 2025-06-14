@@ -66,6 +66,16 @@ pub fn deserialize_key_iv(data: &[u8]) -> ([u8; 32], [u8; 16]) {
     (key, iv)
 }
 
+pub fn encode_bytes_to_hex(bytes: &[u8]) -> String {
+    encode(bytes)
+}
+
+pub fn decode_hex_to_bytes(hex: &str) -> Vec<u8> {
+    decode(hex).expect("Failed to decode hex string")
+}
+
+
+
 
 
 #[cfg(test)]

@@ -1,5 +1,5 @@
 use rust_omr::submitter::gen_clue;
-use rust_omr::types::{OMRItem, PKClue, Payload, PublicKey, PublicParams, SecretKey};
+use rust_omr::types::{Clue, OMRItem, PKClue, Payload, PublicKey, PublicParams, SecretKey};
 use rust_omr; 
 use utils::db::DBEntry;
 // Add this line to import the utils module
@@ -91,15 +91,17 @@ impl Submitter {
         // Encrypt the symmetric key, iv and identifier using the public key
 
         let pke_encryption = utils::pke::encrypt_data(&pke_input, pk);
-        let payload = pke_encryption.clone();
+        let payload: Payload = pke_encryption.clone();
         // Generate the clue using the public parameters, the clue key and the payload
-        let clue = gen_clue(&self.public_params, clue_key.clone(), &payload);
+        let clue: Clue = gen_clue(&self.public_params, clue_key.clone(), &payload);
 
         // Now onto the items we'll put into the DB
         // Encrypt the bug using the symmetric key and iv
         let encrypted_bug = encrypt(&bug, symmetric_key_arr, iv_arr);
         // The DB entry will contain a mapping from the "id_string" i.e. H(symmetric key || iv)
         // to the encrypted bug under this symmetric key and iv.
+
+        let encrypted_bug_hex = utils::aes::encode_bytes_to_hex(&encrypted_bug);
 
         ((clue, payload), (id_string, encrypted_bug))
     }
