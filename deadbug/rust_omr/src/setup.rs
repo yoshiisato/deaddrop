@@ -7,7 +7,7 @@ use std::path::Path;
 use serde::{Serialize, Deserialize};
 
 // ylitchev: key file location
-const KEYS_FILE_LOCATION: &str = "/tmp/funkeys.txt";
+const KEYS_FILE_LOCATION: &str = "../funkeys.txt";
 
 use crate::types::*;
 

@@ -10,7 +10,7 @@ use std::str::FromStr;
 use std::fs::{File, OpenOptions};
 use std::path::Path;
 // ylitchev: key file locationx
-const KEYS_FILE_LOCATION: &str = "/tmp/funkeys_pke.txt";
+const KEYS_FILE_LOCATION: &str = "../funkeys_pke.txt";
 
 pub type EncPublicKey = age::x25519::Recipient;
 pub type EncPrivateKey = age::x25519::Identity;
