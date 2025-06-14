@@ -49,8 +49,39 @@ pub fn decryption_to_string(ciphertext: &[u8], key: &[u8], iv: &[u8]) -> String 
     String::from_utf8(decrypted).expect("Decryption failed or not valid UTF-8")
 }
 
+
+/// Flattens a key+iv tuple to a single Vec<u8>
+pub fn serialize_key_iv(key: &[u8; 32], iv: &[u8; 16]) -> Vec<u8> {
+    [key.as_ref(), iv.as_ref()].concat()
+}
+
+
+/// Unflattens a &[u8] back to (key, iv)
+pub fn deserialize_key_iv(data: &[u8]) -> ([u8; 32], [u8; 16]) {
+    assert_eq!(data.len(), 48);
+    let mut key = [0u8; 32];
+    let mut iv = [0u8; 16];
+    key.copy_from_slice(&data[..32]);
+    iv.copy_from_slice(&data[32..]);
+    (key, iv)
+}
+
+pub fn encode_bytes_to_hex(bytes: &[u8]) -> String {
+    encode(bytes)
+}
+
+pub fn decode_hex_to_bytes(hex: &str) -> Vec<u8> {
+    decode(hex).expect("Failed to decode hex string")
+}
+
+
+
+
+
 #[cfg(test)]
 mod tests {
+    use crate::pke::{decrypt_data, encrypt_data, key_gen};
+
     use super::*;
 
     #[test]
@@ -76,4 +107,32 @@ mod tests {
 
         assert_eq!(decrypted, plaintext_str);
     }
+
+    #[test]
+    fn test_key_iv_encryption_roundtrip() {
+        // Step 1: generate keys
+        let (aes_key, aes_iv) = generate_key_iv();
+
+        // Step 2: serialize to &[u8]
+        let serialized = serialize_key_iv(
+            &aes_key.clone().try_into().unwrap(),
+            &aes_iv.clone().try_into().unwrap(),
+        );
+
+        // Step 3: generate PKE keypair
+        let (identity, recipient) = key_gen();
+
+        // Step 4: encrypt with public key
+        let encrypted = encrypt_data(&serialized, &recipient);
+
+        // Step 5: decrypt with secret key
+        let decrypted = decrypt_data(&encrypted, &identity);
+
+        // Step 6: deserialize and check
+        let (recovered_key, recovered_iv) = deserialize_key_iv(&decrypted);
+
+        assert_eq!(aes_key, recovered_key, "AES keys do not match");
+        assert_eq!(aes_iv, recovered_iv, "AES IVs do not match");
+    }
+
 }
