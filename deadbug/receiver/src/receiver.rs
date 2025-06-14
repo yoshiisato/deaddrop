@@ -12,7 +12,7 @@ use utils::deserialize_omr_payload;
 pub struct Receiver {
     // Fields for the receiver
     public_params: PublicParams,
-    public_key: PublicKey,
+    pub public_key: PublicKey,
     secret_key: SecretKey,
     bug_info: BugInfo,
     enc_keys: EncKeys,

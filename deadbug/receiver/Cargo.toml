@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+dialoguer      = "0.10"
 rust_omr = {path = "../rust_omr", version = "0.1.0"}
 utils = {path = "../utils", version = "0.1.0"}
 submitter = {path = "../submitter", version = "0.1.0"}
