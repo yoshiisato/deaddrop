@@ -1,17 +1,15 @@
+use rust_omr;
 use rust_omr::submitter::gen_clue;
 use rust_omr::types::{Clue, OMRItem, PKClue, Payload, PublicKey, PublicParams, SecretKey};
-use rust_omr; 
 use utils::db::DBEntry;
 // Add this line to import the utils module
-use utils::{self, serialize_omr_payload};
-use utils::hashing::hash_to_string;
-use utils::hashing::hash_to_bytes;
-use utils::aes::encrypt;
-use utils::pke::EncPublicKey;
-use std::process::Command;
 use std::io;
-
-
+use std::process::Command;
+use utils::aes::encrypt;
+use utils::hashing::hash_to_bytes;
+use utils::hashing::hash_to_string;
+use utils::pke::EncPublicKey;
+use utils::{self, serialize_omr_payload};
 
 pub struct Submitter {
     public_params: PublicParams,
@@ -25,7 +23,7 @@ fn check_bug(bug: &[u8]) -> bool {
 
 /// Run `run_test.sh` script to check whether the given attack violates invariants provided
 /// by the bug receiver.
-/// 
+///
 /// This function will panic if `run_test.sh` cannot be spawned, or the script exits with code
 /// other than 0 or 1.
 ///
@@ -44,17 +42,11 @@ fn check_bug_impl(
         .expect("failed to spawn run_test.sh");
 
     let code = output.status.code().unwrap_or(-1);
-    let stdout = String::from_utf8_lossy(&output.stdout)
-        .trim()
-        .to_string();
-    let stderr = String::from_utf8_lossy(&output.stderr)
-        .trim()
-        .to_string();
+    let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
+    let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
 
     match (code, stdout.as_str()) {
-        (0, s) if s.eq_ignore_ascii_case("success") => {
-            false
-        }
+        (0, s) if s.eq_ignore_ascii_case("success") => false,
         (1, s) if s.eq_ignore_ascii_case("fail") => {
             // bug violates invariants
             true
@@ -74,7 +66,12 @@ impl Submitter {
         Submitter { public_params }
     }
 
-    pub fn submit_bug(&self, pk: &EncPublicKey, clue_key: &PKClue, bug: &[u8]) -> (OMRItem, DBEntry) {
+    pub fn submit_bug(
+        &self,
+        pk: &EncPublicKey,
+        clue_key: &PKClue,
+        bug: &[u8],
+    ) -> (OMRItem, DBEntry) {
         if !check_bug(bug) {
             panic!("Bug does not meet the required criteria");
         }
@@ -83,7 +80,10 @@ impl Submitter {
         let id_string = hash_to_string(&id_input_vec);
         let identifier = id_string.as_bytes().to_vec();
         // Ensure symmetric_key and iv are arrays of the correct size
-        let symmetric_key_arr: &[u8; 32] = symmetric_key.as_slice().try_into().expect("Key must be 32 bytes");
+        let symmetric_key_arr: &[u8; 32] = symmetric_key
+            .as_slice()
+            .try_into()
+            .expect("Key must be 32 bytes");
         let iv_arr: &[u8; 16] = iv.as_slice().try_into().expect("IV must be 16 bytes");
         // Put together the symmetric key, iv, and identifier into a single payload
         let pke_input = serialize_omr_payload(symmetric_key_arr, iv_arr, identifier);
@@ -106,4 +106,3 @@ impl Submitter {
         ((clue, payload), (id_string, encrypted_bug))
     }
 }
-

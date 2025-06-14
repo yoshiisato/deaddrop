@@ -9,7 +9,6 @@ use crate::types::{BugInfo, BugMetadata, BugStatus, EncKeys, ReceiverError};
 
 use utils::deserialize_omr_payload;
 
-
 pub struct Receiver {
     // Fields for the receiver
     pub public_params: PublicParams,
@@ -63,7 +62,6 @@ impl Receiver {
 
         match dec_payload {
             rust_omr::types::DecodeResult::PayloadList(decoded) => {
-
                 //use a queue to do this
                 for payload in decoded.iter() {
                     self.decoded_paylods_queue.push_back(payload.to_vec());
@@ -93,16 +91,21 @@ impl Receiver {
                 // Decrypt the payload
                 let decrypted_payload = self.enc_keys.decrypt(payload);
                 // Extracting the key, iv and identifier from the decrypted payload
-                let result = deserialize_omr_payload(decrypted_payload.as_slice()); 
-                match result{
+                let result = deserialize_omr_payload(decrypted_payload.as_slice());
+                match result {
                     Ok((key, iv, identifier)) => {
                         // identifier needs to be converted to a string
 
                         let identifier = String::from_utf8(identifier);
 
                         if identifier.is_err() {
-                            println!("Error converting identifier to string: {}", identifier.err().unwrap());
-                            return Err(ReceiverError("Failed to convert identifier to string".to_string()));
+                            println!(
+                                "Error converting identifier to string: {}",
+                                identifier.err().unwrap()
+                            );
+                            return Err(ReceiverError(
+                                "Failed to convert identifier to string".to_string(),
+                            ));
                         }
 
                         let identifier = identifier.unwrap();
@@ -113,54 +116,62 @@ impl Receiver {
                             symmetric_key: (key, iv), // Tuple containing symmetric key and IV
                             encrypted_bug: String::new(), // Placeholder for encrypted bug in hex format
                             decrypted_bug: String::new(), // Placeholder for decrypted bug content
-                            status: BugStatus::Pending, // Initial status
+                            status: BugStatus::Pending,   // Initial status
                         }));
                     }
                     Err(e) => {
                         println!("Error deserializing payload: {}", e);
-                        return Err(ReceiverError(format!("Failed to deserialize payload: {}", e)));
+                        return Err(ReceiverError(format!(
+                            "Failed to deserialize payload: {}",
+                            e
+                        )));
                     }
                 }
-                
             } else {
                 println!("No payloads available in the queue.");
                 return Ok(None);
             }
-        }else {
+        } else {
             println!("No decoded payloads available.");
             return Ok(None);
         }
     }
 
     // Method to extract id and symmetric key from the decoded payload (popped from the queue by previous function)
-    pub fn extract_info_from_decoded_payload(&self, payload: &BugMetadata) -> (String, (Vec<u8>, Vec<u8>)) {
+    pub fn extract_info_from_decoded_payload(
+        &self,
+        payload: &BugMetadata,
+    ) -> (String, (Vec<u8>, Vec<u8>)) {
         // Extract the id and symmetric key from the BugMetadata
 
         // TODO: perhaps to remove
         let id = payload.bug_id.clone();
         let symmetric_key = payload.symmetric_key.clone();
-        
+
         (id, symmetric_key)
     }
 
-    pub fn decrypt_bug_report(&self, enc_hex_file: &str, symmetric_key: (Vec<u8>, Vec<u8>)) -> Vec<u8> {
+    pub fn decrypt_bug_report(
+        &self,
+        enc_hex_file: &str,
+        symmetric_key: (Vec<u8>, Vec<u8>),
+    ) -> Vec<u8> {
         // Logic to decrypt the bug report using the symmetric key
         // For now, we just return a dummy decrypted report
-        
+
         let (key, iv) = symmetric_key;
 
-        // the ciphertext is in hex format 
+        // the ciphertext is in hex format
         let ciphertext = utils::aes::decode_hex_to_bytes(enc_hex_file);
 
         let decrypted_report = utils::aes::decrypt(&ciphertext, &key.as_slice(), &iv.as_slice());
 
-        // Convert decrypted bytes to string and return 
+        // Convert decrypted bytes to string and return
         // utils::aes::encode_bytes_to_hex(&decrypted_report)
 
         decrypted_report
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -179,9 +190,8 @@ mod tests {
     fn test_decode_digest() {
         let mut receiver = Receiver::new();
 
-        // Get the detection_key 
+        // Get the detection_key
         let detection_key = receiver.public_key.pk_detect.clone();
-
 
         // Code from other modules
         // -------------------------------
@@ -189,12 +199,21 @@ mod tests {
         // Create a Submitter instance to generate the data for the BB
         let submitter = Submitter::new();
         let bug = b"Test bug report".to_vec();
-        let (omr_item, db_entry): (OMRItem, DBEntry) = submitter.submit_bug(&receiver.enc_keys.pk_enc, &receiver.public_key.pk_clue, &bug);
+        let (omr_item, db_entry): (OMRItem, DBEntry) = submitter.submit_bug(
+            &receiver.enc_keys.pk_enc,
+            &receiver.public_key.pk_clue,
+            &bug,
+        );
 
         // Create the bulletin board with the omr_item
         let bulletin_board = vec![omr_item];
-        // Create the digest from the detector 
-        let digest = rust_omr::detector::detect(&receiver.public_params, &bulletin_board, detection_key.as_slice(), 1);
+        // Create the digest from the detector
+        let digest = rust_omr::detector::detect(
+            &receiver.public_params,
+            &bulletin_board,
+            detection_key.as_slice(),
+            1,
+        );
 
         // --------------------------
 
@@ -207,7 +226,7 @@ mod tests {
     fn test_get_next_decoded_payload() {
         let mut receiver = Receiver::new();
 
-        // Get the detection_key 
+        // Get the detection_key
         let detection_key = receiver.public_key.pk_detect.clone();
 
         // Code from other modules
@@ -216,19 +235,28 @@ mod tests {
         // Create a Submitter instance to generate the data for the BB
         let submitter = Submitter::new();
         let bug = b"Test bug report".to_vec();
-        let (omr_item, db_entry): (OMRItem, DBEntry) = submitter.submit_bug(&receiver.enc_keys.pk_enc, &receiver.public_key.pk_clue, &bug);
+        let (omr_item, db_entry): (OMRItem, DBEntry) = submitter.submit_bug(
+            &receiver.enc_keys.pk_enc,
+            &receiver.public_key.pk_clue,
+            &bug,
+        );
 
         // Create the bulletin board with the omr_item
         let bulletin_board = vec![omr_item];
-        // Create the digest from the detector 
-        let digest = rust_omr::detector::detect(&receiver.public_params, &bulletin_board, detection_key.as_slice(), 1);
+        // Create the digest from the detector
+        let digest = rust_omr::detector::detect(
+            &receiver.public_params,
+            &bulletin_board,
+            detection_key.as_slice(),
+            1,
+        );
 
         // --------------------------
 
         receiver.decode_digest(&digest).unwrap();
-        
+
         let next_payload = receiver.get_next_decoded_payload().unwrap();
-        
+
         assert!(next_payload.is_some());
 
         // Check BugMetadata fields
@@ -246,7 +274,7 @@ mod tests {
     fn test_decrypt_bug_report() {
         let mut receiver = Receiver::new();
 
-        // Get the detection_key 
+        // Get the detection_key
         let detection_key = receiver.public_key.pk_detect.clone();
 
         // Code from other modules
@@ -255,12 +283,21 @@ mod tests {
         // Create a Submitter instance to generate the data for the BB
         let submitter = Submitter::new();
         let bug = b"Test bug report".to_vec();
-        let (omr_item, db_entry): (OMRItem, DBEntry) = submitter.submit_bug(&receiver.enc_keys.pk_enc, &receiver.public_key.pk_clue, &bug);
+        let (omr_item, db_entry): (OMRItem, DBEntry) = submitter.submit_bug(
+            &receiver.enc_keys.pk_enc,
+            &receiver.public_key.pk_clue,
+            &bug,
+        );
 
         // Create the bulletin board with the omr_item
         let bulletin_board = vec![omr_item];
-        // Create the digest from the detector 
-        let digest = rust_omr::detector::detect(&receiver.public_params, &bulletin_board, detection_key.as_slice(), 1);
+        // Create the digest from the detector
+        let digest = rust_omr::detector::detect(
+            &receiver.public_params,
+            &bulletin_board,
+            detection_key.as_slice(),
+            1,
+        );
 
         // --------------------------
         // Try to decode the digest
@@ -273,21 +310,21 @@ mod tests {
 
         //---------------------------
 
-
         receiver.decode_digest(&digest).unwrap();
-        
+
         let next_payload = receiver.get_next_decoded_payload().unwrap().unwrap();
-        
+
         let (id, symmetric_key) = receiver.extract_info_from_decoded_payload(&next_payload);
-        
+
         assert!(!id.is_empty());
-        
+
         // Decrypt the bug report
         let encrypted_bug = db_entry.1;
         let encrypted_bug_hex = utils::aes::encode_bytes_to_hex(&encrypted_bug);
 
-        let decrypted_report = receiver.decrypt_bug_report(encrypted_bug_hex.as_str(), symmetric_key);
-        
-        assert_eq!(decrypted_report,bug) 
+        let decrypted_report =
+            receiver.decrypt_bug_report(encrypted_bug_hex.as_str(), symmetric_key);
+
+        assert_eq!(decrypted_report, bug)
     }
 }
