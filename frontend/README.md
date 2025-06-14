@@ -6,4 +6,5 @@ pip install -r requirements.txt
 
 Run
 
-flask --app app.py --debug run
+
+DETECTOR_PATH=/path/to/detector flask --app app.py --debug run

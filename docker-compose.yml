@@ -6,7 +6,9 @@ services:
       - /var/run/tappd.sock:/var/run/tappd.sock
     environment:
       TDX_SOCKET: /var/run/tappd.sock  
+      RUST_BACKTRACE: 1
     ports:
       - "8000:8080"
     # and override the ENTRYPOINT args if you like:
-    command: bash ./script.sh a a a
+    #command: bash ./script.sh
+    command: bash ./script.sh

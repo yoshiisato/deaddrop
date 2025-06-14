@@ -4,7 +4,7 @@ FROM aztecprotocol/foundry:25f24e677a6a32a62512ad4f561995589ac2c7dc-arm64
 # ── 2) Install rustup & toolchain ────────────────────────────────────
 USER root
 RUN apt-get update \
- && apt-get install -y curl build-essential ca-certificates \
+ && apt-get install -y curl build-essential ca-certificates jq \
  && rm -rf /var/lib/apt/lists/* \
  # install rustup non-interactive, set up stable toolchain
  && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \

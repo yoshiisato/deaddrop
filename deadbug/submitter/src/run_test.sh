@@ -8,7 +8,7 @@ inv="$4"
 
 mkdir -p bin
 
-forge init bin/bug-verify &> /dev/null
+forge init --no-git bin/bug-verify &> /dev/null
 
 # move bug and inv file to test folder
 dest="./bin/bug-verify/test"
