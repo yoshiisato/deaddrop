@@ -35,7 +35,7 @@ impl<'a> Detector<'a> {
 
         // Use "OMR" to detect the payloads corresponding to pk_detect from the bulletin board
         let vec_payload: Vec<Payload> = detect(&pp, &bb, pk, k_bound);
-        println!("Detected payloads: {:?}", vec_payload);
+        // println!("Detected payloads: {:?}", vec_payload);
     
     Detector { public_params: pp, 
         pk_detect: pk, 
