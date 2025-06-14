@@ -86,6 +86,7 @@ def bug_lookup():
     pk_detect = ""
     bug_id = ""
     tool_error = None
+    stdout = None
 
     if request.method == 'POST':
         form_type = request.form.get('form_type')
@@ -130,14 +131,15 @@ def bug_lookup():
                         check=True,
                         text=True
                     )
-                    raw_bugs = json.loads(result.stdout)
-                    bugs = []
-                    for b in raw_bugs:
-                        bugs.append({
-                            "bugid": b.get("bugid"),
-                            "ciphertext": b.get("decryption_key"),
-                            "timestamp": datetime.fromisoformat(b.get("timestamp"))
-                        })
+                    stdout = result.stdout
+                    # raw_bugs = json.loads(result.stdout)
+                    # bugs = []
+                    # for b in raw_bugs:
+                    #     bugs.append({
+                    #         "bugid": b.get("bugid"),
+                    #         "ciphertext": b.get("decryption_key"),
+                    #         "timestamp": datetime.fromisoformat(b.get("timestamp"))
+                    #     })
                 except FileNotFoundError:
                     tool_error = "❌ detect_tool not found. Please make sure it is compiled and located in the project directory."
                 except subprocess.CalledProcessError as e:
@@ -149,7 +151,8 @@ def bug_lookup():
     return render_template("bug_lookup.html",
                            pk_detect=pk_detect,
                            bug_id=bug_id,
-                           bugs=bugs,
+                           bugs=None,
+                           stdout=stdout,
                            tool_error=tool_error,
                            current_year=datetime.utcnow().year)
 

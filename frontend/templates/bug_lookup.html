@@ -30,6 +30,10 @@
             </div>
           {% endif %}
 
+          {% if stdout %}
+          <code>{{ stdout }}</code>
+          {% endif %}
+
           {% if bugs %}
             {% if pk_detect == "*" %}
               <div class="alert alert-warning">
