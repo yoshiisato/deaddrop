@@ -32,27 +32,9 @@
 
           {% if stdout %}
           <code>{{ stdout }}</code>
-          {% endif %}
-{{/*
-          {% if bugs %}
-            {% if pk_detect == "*" %}
-              <div class="alert alert-warning">
-                Debug: Showing all bug reports (special pk_detect * entered)
-              </div>
-            {% endif %}
-            <h5 class="mb-3">Bug Reports</h5>
-            {% for bug in bugs %}
-              <div class="card mb-3">
-                <div class="card-body">
-                  <p><strong>Ciphertext entry ID: {{ bug.bugid }}</strong></p>
-                  <p><strong>Decryption Key: </strong> <code>{{ bug.ciphertext }}</code></p>
-                  <p class="text-muted small">Reported: {{ bug.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
-                </div>
-              </div>
-            {% endfor %}
           {% elif pk_detect %}
             <div class="alert alert-warning">No bugs found for detection key <code>{{ pk_detect }}</code>.</div>
-          {% endif %}  */}}
+          {% endif %}
         </div>
       </div>
     </div>
