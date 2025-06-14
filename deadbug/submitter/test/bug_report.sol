@@ -30,10 +30,10 @@ contract Attack {
 contract AttackHelper is Test {
     Attack public att;
 
-    function bug(uint256 forkId, address daoAddr) internal {
+    function bug(uint256 forkId, address targetAddr) internal {
         vm.selectFork(forkId);
 
-        att = new Attack{ value: 1 ether }(daoAddr);
+        att = new Attack{ value: 1 ether }(targetAddr);
         att.attack{ value: 1 ether }();
     }
 }
