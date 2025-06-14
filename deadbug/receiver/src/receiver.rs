@@ -2,20 +2,21 @@ use std::collections::VecDeque;
 
 use rust_omr::receiver::decode;
 use rust_omr::setup::{gen_param, keygen};
-use rust_omr::types::{Payload, PublicKey, PublicParams, SecretKey};
+use rust_omr::types::{encode_pk_clue_to_hex, Payload, PublicKey, PublicParams, SecretKey};
 use submitter::submitter::Submitter;
 
 use crate::types::{BugInfo, BugMetadata, BugStatus, EncKeys, ReceiverError};
 
 use utils::deserialize_omr_payload;
 
+
 pub struct Receiver {
     // Fields for the receiver
-    public_params: PublicParams,
+    pub public_params: PublicParams,
     pub public_key: PublicKey,
     secret_key: SecretKey,
     bug_info: BugInfo,
-    enc_keys: EncKeys,
+    pub enc_keys: EncKeys,
     decoded_paylods_queue: VecDeque<Payload>, // A queue to store retrieved info not yet fetched from the DB
 }
 
@@ -54,7 +55,7 @@ impl Receiver {
         let enc_key = self.enc_keys.pk_enc.clone();
 
         println!("Encryption Key: {:?}", enc_key);
-        println!("Clue Key: {:?}", clue_key);
+        println!("Clue Key: {}", encode_pk_clue_to_hex(&clue_key));
     }
 
     pub fn decode_digest(&mut self, digest: &Vec<Payload>) -> Result<(), ReceiverError> {
@@ -62,14 +63,13 @@ impl Receiver {
 
         match dec_payload {
             rust_omr::types::DecodeResult::PayloadList(decoded) => {
-                println!("Decoded Payloads: {:?}", decoded);
 
                 //use a queue to do this
                 for payload in decoded.iter() {
                     self.decoded_paylods_queue.push_back(payload.to_vec());
                 }
 
-                print!("Decoded Payloads added to the internal queue!");
+                println!("Decoded Payloads added to the internal queue!");
                 Ok(())
             }
             _ => {
@@ -164,7 +164,7 @@ impl Receiver {
 
 #[cfg(test)]
 mod tests {
-    use rust_omr::types::OMRItem;
+    use rust_omr::types::{decode_payloads, encode_payloads, OMRItem};
     use utils::db::DBEntry;
 
     use super::*;
@@ -263,6 +263,16 @@ mod tests {
         let digest = rust_omr::detector::detect(&receiver.public_params, &bulletin_board, detection_key.as_slice(), 1);
 
         // --------------------------
+        // Try to decode the digest
+
+        let encoded_digest = encode_payloads(&digest);
+
+        let digest_decoded: Vec<Payload> = decode_payloads(&encoded_digest);
+
+        assert_eq!(digest, digest_decoded);
+
+        //---------------------------
+
 
         receiver.decode_digest(&digest).unwrap();
         
