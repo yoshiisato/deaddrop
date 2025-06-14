@@ -1,7 +1,6 @@
 use bincode;
 use hex;
 
-
 pub type Payload = Vec<u8>; // x ∈ {0,1}^P
 
 pub fn encode_payloads(payloads: &Vec<Vec<u8>>) -> String {
@@ -18,7 +17,6 @@ pub type Clue = Vec<u8>;
 pub type OMRItem = (Clue, Payload); // (clue, payload)
 pub type BulletinBoard = Vec<OMRItem>;
 
-
 pub type PKDetect = Vec<u8>; // Public key for detection
 pub type PKClue = Vec<u8>; // Public key for clue generation
 
@@ -34,7 +32,7 @@ pub struct PublicKey {
     pub pk_clue: PKClue,
     pub pk_detect: PKDetect,
 }
-    
+
 pub fn encode_pk_detect_to_hex(pk_detect: &PKDetect) -> String {
     hex::encode(pk_detect)
 }
@@ -47,7 +45,6 @@ pub fn encode_pk_clue_to_hex(pk_clue: &PKClue) -> String {
 pub fn decode_pk_clue_from_hex(hex_str: &str) -> Result<PKClue, String> {
     hex::decode(hex_str).map_err(|e| e.to_string())
 }
-
 
 #[derive(Clone)]
 pub struct SecretKey {

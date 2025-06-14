@@ -49,12 +49,10 @@ pub fn decryption_to_string(ciphertext: &[u8], key: &[u8], iv: &[u8]) -> String 
     String::from_utf8(decrypted).expect("Decryption failed or not valid UTF-8")
 }
 
-
 /// Flattens a key+iv tuple to a single Vec<u8>
 pub fn serialize_key_iv(key: &[u8; 32], iv: &[u8; 16]) -> Vec<u8> {
     [key.as_ref(), iv.as_ref()].concat()
 }
-
 
 /// Unflattens a &[u8] back to (key, iv)
 pub fn deserialize_key_iv(data: &[u8]) -> ([u8; 32], [u8; 16]) {
@@ -73,10 +71,6 @@ pub fn encode_bytes_to_hex(bytes: &[u8]) -> String {
 pub fn decode_hex_to_bytes(hex: &str) -> Vec<u8> {
     decode(hex).expect("Failed to decode hex string")
 }
-
-
-
-
 
 #[cfg(test)]
 mod tests {
@@ -134,5 +128,4 @@ mod tests {
         assert_eq!(aes_key, recovered_key, "AES keys do not match");
         assert_eq!(aes_iv, recovered_iv, "AES IVs do not match");
     }
-
 }
