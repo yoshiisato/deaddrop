@@ -1,6 +1,6 @@
-use crate::types::{BulletinBoard, Clue, PKClue, Payload, PublicKey, PublicParams};
 use std::thread::sleep;
 use std::time::Duration;
+use crate::types::{BulletinBoard, Clue, PKClue, Payload, PublicKey, PublicParams};
 
 struct Detector {}
 

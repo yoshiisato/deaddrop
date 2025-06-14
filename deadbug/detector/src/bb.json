@@ -1,0 +1,10 @@
+{
+    "omr":[
+        {"clue": "c1",
+        "payload": "payload1"},
+        {"clue": "c2",
+        "payload": "payload2"},
+        {"clue": "c1",
+        "payload": "payload3"}
+    ]
+}
