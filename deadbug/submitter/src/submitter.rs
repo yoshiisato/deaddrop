@@ -27,7 +27,7 @@ fn check_bug(bug: &[u8]) -> bool {
 /// This function will panic if `run_test.sh` cannot be spawned, or the script exits with code
 /// other than 0 or 1.
 ///
-fn check_bug_impl(
+pub fn check_bug_impl(
     contract_addr: &str,
     block_num: u32,
     bug_filepath: &str,

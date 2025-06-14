@@ -1,7 +1,9 @@
 use std::env;
 use std::fs::File;
 use std::io::{self, Read, Write};
-
+use submitter::submitter::Submitter;
+use submitter::submitter::*;
+// use crate::check_bug_impl; // Uncomment and fix this if check_bug_impl exists elsewhere
 fn read_contract_addr(file_path: &str) -> io::Result<String> {
     let mut file = File::open(file_path)?;
     let mut contents = String::new();
@@ -21,9 +23,9 @@ fn read_block_num(file_path: &str) -> io::Result<u32> {
 
 fn main() {
     // Get everthing you need for the bug check
-    let bug_file = "bug/bug_report.txt";
+    let bug_file = "bug/bug_report.sol";
     let block_num_file = "test/block_num.txt";
-    let test_file = "test/test_example.txt";
+    let test_file = "test/test_example.sol";
     let contract_addr_file = "test/contract_addr.txt";
 
     let block_num = read_block_num(block_num_file).unwrap();
@@ -40,19 +42,19 @@ fn main() {
     bug_file.read_to_end(&mut buffer).unwrap();
     let bug = buffer.as_slice();
 
-    let pp_file = "test/public_params.txt";
-    let mut pp_file = File::open(pp_file).unwrap();
-    let mut pp_buffer = String::new();
-    pp_file.read_to_string(&mut pp_buffer).unwrap();
-    let pp: PublicParams = serde_json::from_str(&pp_buffer).expect("Failed to parse public params");
+    // let pp_file = "test/public_params.txt";
+    // let mut pp_file = File::open(pp_file).unwrap();
+    // let mut pp_buffer = String::new();
+    // pp_file.read_to_string(&mut pp_buffer).unwrap();
+    // let pp: PublicParams = serde_json::from_str(&pp_buffer).expect("Failed to parse public params");
 
-    let submitter = Submitter { public_params: pp };
+    // let submitter = Submitter { public_params: pp };
 
-    let enc_pk_file = "test/enc_pk.txt";
-    let enc_pk = File::open(enc_pk_file).expect("Failed to open enc_pk file");
+    // let enc_pk_file = "test/enc_pk.txt";
+    // let enc_pk = File::open(enc_pk_file).expect("Failed to open enc_pk file");
 
-    let clue_key_file = "test/clue_key.txt";
-    let clue_key = File::open(clue_key_file).expect("Failed to open clue_key file");
+    // let clue_key_file = "test/clue_key.txt";
+    // let clue_key = File::open(clue_key_file).expect("Failed to open clue_key file");
 
     // submitter.submit_bug(
     //     enc_pk,
