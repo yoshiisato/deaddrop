@@ -26,6 +26,7 @@ def register():
     if request.method == 'POST':
         e = Entry(
             pk_clue=request.form['pk_clue'],
+            pk_encryption=request.form['pk_encryption'],
             sc_addr=request.form['sc_addr'],
             constraints=request.form['constraints']
         )
@@ -35,10 +36,8 @@ def register():
         return redirect(url_for('show_list'))
     return render_template('register.html', current_year=datetime.utcnow().year)
 
-@app.route('/submit_bug/<int:entry_id>', methods=['GET', 'POST'])
-def submit_bug(entry_id):
-    entry = Entry.query.get_or_404(entry_id)
-
+@app.route('/submit_bug', methods=['GET', 'POST'])
+def submit_bug():
     if request.method == 'POST':
         file = request.files.get('bugfile')
         if not file or not file.filename.lower().endswith('.json'):
@@ -55,7 +54,6 @@ def submit_bug(entry_id):
                     flash("JSON must include keys: " + ", ".join(required), "danger")
                 else:
                     bug = BugReport(
-                        entry_id   = entry.id,
                         bugid      = data['bugid'],
                         ciphertext = data['ciphertext'],
                         omr_payload= json.dumps(data['omr_payload']),
@@ -78,7 +76,6 @@ def submit_bug(entry_id):
 
     return render_template(
         'submit_bug.html',
-        entry=entry,
         example_json=example_json,
         current_year=datetime.utcnow().year
     )
@@ -114,3 +111,9 @@ def bug_lookup():
                            bugs=bugs,
                            found_bug=found_bug,
                            current_year=datetime.utcnow().year)
+
+
+@app.route('/bug_reports')
+def all_bug_reports():
+    all_bugs = BugReport.query.order_by(BugReport.timestamp.desc()).all()
+    return render_template("all_bug_reports.html", bugs=all_bugs)

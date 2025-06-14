@@ -13,7 +13,7 @@
 
         <!-- Main content: form and bug results -->
         <div class="col-md-8">
-          <h2 class="mb-4">Obliviously Retrieve Report Key (using OMR)</h2>
+          <h2 class="mb-4">Obliviously Retrieve Report Decryption Key</h2>
           <form method="post" class="mb-4">
             <input type="hidden" name="form_type" value="detect_lookup">
             <div class="form-floating">
@@ -42,33 +42,6 @@
             {% endfor %}
           {% elif pk_detect %}
             <div class="alert alert-warning">No bugs found for detection key <code>{{ pk_detect }}</code>.</div>
-          {% endif %}
-
-
-          <h2 class="mb-4">Retrieve Encrypted Bug Reports</h2>
-          <form method="post" class="mb-4">
-            <input type="hidden" name="form_type" value="bug_id_lookup">
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="bug_id" name="bug_id"
-                    placeholder="Enter bug id" value="{{ bug_id }}">
-              <label for="bug_id">Ciphertext entry ID</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Search</button>
-          </form>
-
-          {% if found_bug %}
-            <div class="card mb-4">
-              <div class="card-body">
-                <ul>
-                  <li><strong>Bug ID:</strong> {{ found_bug.bugid }}</li>
-                  <li><strong>Ciphertext Key:</strong> <code>{{ found_bug.ciphertext }}</code></li>
-                </ul>
-              </div>
-            </div>
-          {% else %}
-            <div class="alert alert-warning">No bug found with ID
-              {% if bug_id %}<code>{{ bug_id }}</code>
-              {% else %} empty {% endif %}.</div>
           {% endif %}
         </div>
       </div>

@@ -21,25 +21,9 @@
         </button>
         <div class="collapse navbar-collapse" id="mainNav">
           <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a
-                class="nav-link {% if request.endpoint=='index' %}active{% endif %}"
-                href="{{ url_for('register') }}">
-              >Add a Call</a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link {% if request.endpoint=='show_list' %}active{% endif %}"
-                href="{{ url_for('show_list') }}"
-              >Open Calls</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link {% if request.endpoint=='bug_lookup' %}active{% endif %}"
-                href="{{ url_for('bug_lookup') }}">
-                Bug Lookup
-              </a>
-            </li>
-
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('all_bug_reports') }}">>All Bugs Reports</a></li>
+            <li class="nav-item"><a class="nav-link {% if request.endpoint=='index' %}active{% endif %}" href="{{ url_for('register') }}">>Add a Call</a></li>
+            <li class="nav-item"><a class="nav-link {% if request.endpoint=='bug_lookup' %}active{% endif %}" href="{{ url_for('bug_lookup') }}">>Bug Lookup</a></li>
           </ul>
         </div>
       </div>
@@ -63,7 +47,7 @@
 
     <footer class="bg-light py-3 mt-auto">
       <div class="container text-center text-muted">
-        &copy; {{ current_year }} DeadDrop
+        &copy; {{ current_year }} DeadDrop Team at IC3 Blockchain Camp 2025
       </div>
     </footer>
 
