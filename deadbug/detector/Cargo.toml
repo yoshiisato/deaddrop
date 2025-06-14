@@ -1,6 +1,13 @@
 [package]
-name = "detector"
+name = "deadbug_detector"
 version = "0.1.0"
 edition = "2021"
 
+
 [dependencies]
+rust_omr = {path = "../rust_omr", version = "0.1.0"}
+deadbug_receiver = {path = "../receiver", version = "0.1.0"}
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.140"
+base64 = "0.22.1"
+
