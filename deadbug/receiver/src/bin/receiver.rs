@@ -62,7 +62,9 @@ pub fn main() {
 
     // Decrypt the bug report
     let encrypted_bug = db_entry.1;
+
     let encrypted_bug_hex = utils::aes::encode_bytes_to_hex(&encrypted_bug);
+    println!("Encrypted Bug Report (hex): {}", encrypted_bug_hex);
 
     let decrypted_report = receiver.decrypt_bug_report(encrypted_bug_hex.as_str(), symmetric_key);
 

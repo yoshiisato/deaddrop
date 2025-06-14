@@ -114,7 +114,7 @@ fn handle_process_id(receiver: &mut Receiver) {
 
                 let (id, symmetric_key) = receiver.extract_info_from_decoded_payload(&payload);
 
-                info!("We have an id=[{id}]");
+                info!("\nWe have an id=[{id}]");
 
                 // Request a ciphertext from user input
                 let ciphertext: String = Input::new()
@@ -127,7 +127,11 @@ fn handle_process_id(receiver: &mut Receiver) {
                 // Decode the ciphertext, get the plaintext and print it
                 let plaintext = receiver.decrypt_bug_report(&ciphertext, symmetric_key);
 
-                info!("Resulting plaintext: {:?}", plaintext);
+                println!(
+                    "Decrypted Bug Report: {:?}",
+                    String::from_utf8(plaintext)
+                        .unwrap_or_else(|_| "Failed to convert decrypted report to string".to_string())
+                );
             } else {
                 warn!("Nothing was popped from queue!");
             }
