@@ -284,7 +284,8 @@ mod tests {
         );
 
         // Create the bulletin board with the omr_item
-        let bulletin_board = vec![omr_item];
+        let copy = omr_item.clone();
+        let bulletin_board = vec![omr_item, copy];
         // Create the digest from the detector
         let digest = rust_omr::detector::detect(
             &receiver.public_params,
@@ -296,11 +297,15 @@ mod tests {
         // --------------------------
         // Try to decode the digest
 
+        assert_eq!(digest.len(), 2);
+
         let encoded_digest = encode_payloads(&digest);
 
         let digest_decoded: Vec<Payload> = decode_payloads(&encoded_digest);
 
         assert_eq!(digest, digest_decoded);
+
+        assert_eq!(digest_decoded.len(), 2);
 
         //---------------------------
 
