@@ -1,4 +1,6 @@
 use deadbug_receiver::receiver::Receiver;
+use std::fs::File;
+use std::io::{self, Read, Write};
 use rust_omr::types::{
     decode_payloads, decode_pk_detect_from_hex, encode_payloads, encode_pk_detect_to_hex, OMRItem,
     Payload,
@@ -26,7 +28,15 @@ pub fn main() {
 
     // Create a Submitter instance to generate the data for the BB
     let submitter = Submitter::new();
-    let bug = b"Test bug report".to_vec();
+    
+    //---------------from file
+    let bug_file = "../submitter/bug/bug_report.sol";
+    let mut bug_file = File::open(bug_file).unwrap();
+    let mut buffer = Vec::new();
+    bug_file.read_to_end(&mut buffer).unwrap();
+    let bug = buffer.as_slice();
+
+    // let bug = b"Test bug report".to_vec();
     let (omr_item, db_entry): (OMRItem, DBEntry) = submitter.submit_bug(
         &receiver.enc_keys.pk_enc,
         &receiver.public_key.pk_clue,
@@ -54,7 +64,7 @@ pub fn main() {
 
     //---------------------------
 
-    receiver.decode_digest(&digest).unwrap();
+    receiver.decode_digest(&digest_decoded).unwrap();
 
     let next_payload = receiver.get_next_decoded_payload().unwrap().unwrap();
 

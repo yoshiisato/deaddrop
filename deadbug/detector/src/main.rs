@@ -22,7 +22,8 @@ fn main() {
 
 
     let k_bound = 10;
-    let detector = Detector::new(input.as_bytes(),path, k_bound);
+    let input_hex = hex::decode(input).expect("Failed to decode input hex");
+    let detector = Detector::new(&input_hex, path, k_bound);
     println!("Detection complete!");
     detector.get_payloads();
     println!("Payloads: {:?}", encode_payloads(detector.get_payloads()));

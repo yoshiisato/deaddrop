@@ -30,11 +30,8 @@ impl EncKeys {
         // Generate keys for encryption
         let (sk, pk) = key_gen();
 
-        let pk_enc = pk; // Placeholder for public key
-        let sk_enc = sk; // Placeholder for secret key
-
         // Call keygen from utils
-        EncKeys { pk_enc, sk_enc }
+        EncKeys { pk_enc: pk, sk_enc: sk }
     }
 
     pub fn decrypt(&self, encrypted_data: &[u8]) -> Vec<u8> {

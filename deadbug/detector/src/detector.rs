@@ -3,9 +3,11 @@
 use serde::Deserialize;
 use std::fs::File;
 use std::io::BufReader;
+use hex;
+use utils::db::read_data_from_json_file;
 
 
-use rust_omr::types::{Payload, PublicKey, PublicParams, BulletinBoard};
+use rust_omr::types::{decode_payloads, decode_pk_clue_from_hex, BulletinBoard, Payload, PublicKey, PublicParams};
 use rust_omr::setup::{gen_param};
 use rust_omr::detector::detect;
 // use crate::detector::decode;
@@ -35,7 +37,6 @@ impl<'a> Detector<'a> {
 
         // Use "OMR" to detect the payloads corresponding to pk_detect from the bulletin board
         let vec_payload: Vec<Payload> = detect(&pp, &bb, pk, k_bound);
-        // println!("Detected payloads: {:?}", vec_payload);
     
     Detector { public_params: pp, 
         pk_detect: pk, 
@@ -63,18 +64,17 @@ struct OmrJson {
 }
 
 pub fn read_bulletin_board_from_json(path: &str) -> BulletinBoard {
-    let file = File::open(path).expect("Failed to open file");
-    let reader = BufReader::new(file);
-    let data: OmrJson = serde_json::from_reader(reader).expect("Failed to parse JSON");
+    let json_data = std::fs::read_to_string(path).expect("Failed to read JSON file");
+    let data: OmrJson = serde_json::from_str(&json_data).expect("Failed to parse JSON");
 
-    let bb: BulletinBoard = data.omr.into_iter().map(|entry| {
-        let clue = entry.clue.into_bytes();
-        let payload = entry.payload.into_bytes();
+    let bb = data.omr.into_iter().map(|entry| {
+        let clue = hex::decode(&entry.clue).expect("Failed to decode omr_clue");
+        let payload = hex::decode(&entry.payload).expect("Failed to decode omr_payload");
         // println!("Clue: {:?}", clue);
         // println!("Payload: {:?}", payload);
         (clue, payload)
     }).collect();
-    // println!("Bulletin Board: {:?}", bb);
+
     bb
 
 }
