@@ -130,7 +130,7 @@ fn handle_process_id(receiver: &mut Receiver) {
                     .interact_text()
                     .expect("failed to read line");
 
-                info!("You typed: {ciphertext}\n");
+                // info!("You typed: {ciphertext}\n");
 
                 // Decode the ciphertext, get the plaintext and print it
                 let plaintext = receiver.decrypt_bug_report(&ciphertext, symmetric_key);
