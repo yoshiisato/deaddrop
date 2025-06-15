@@ -7,7 +7,11 @@
       <p><strong>Clue Key:</strong> {{ entry.pk_clue }}</p>
       <p><strong>Encryption Key:</strong> {{ entry.pk_encryption }}</p>
       <p><strong>Smart Contract Address:</strong> {{ entry.sc_addr }}</p>
-      <p><strong>Constraints / Invariants:</strong> {{ entry.constraints }}</p>
+      <p><strong>Invariants (test case):</strong>
+        <code>
+          {{ entry.constraints }}
+        </code>
+      </p>
       <p><strong>Created:</strong> {{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
     </div>
   </div>
