@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Entry Details</h2>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <p><strong>Clue Key:</strong> {{ entry.pk_clue }}</p>
+      <p><strong>Encryption Key:</strong> {{ entry.pk_encryption }}</p>
+      <p><strong>Smart Contract Address:</strong> {{ entry.sc_addr }}</p>
+      <p><strong>Constraints / Invariants:</strong> {{ entry.constraints }}</p>
+      <p><strong>Created:</strong> {{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+    </div>
+  </div>
+  <a href="{{ url_for('show_list') }}" class="btn btn-secondary mt-3">← Back to List</a>
+</div>
+{% endblock %}

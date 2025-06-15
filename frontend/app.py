@@ -161,3 +161,9 @@ def bug_lookup():
 def all_bug_reports():
     all_bugs = BugReport.query.order_by(BugReport.timestamp.desc()).all()
     return render_template("all_bug_reports.html", bugs=all_bugs)
+
+
+@app.route('/entry/<int:entry_id>')
+def entry_detail(entry_id):
+    entry = Entry.query.get_or_404(entry_id)
+    return render_template('entry_detail.html', entry=entry)
