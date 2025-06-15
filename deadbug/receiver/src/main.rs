@@ -128,7 +128,7 @@ fn handle_process_id(receiver: &mut Receiver) {
                 let plaintext = receiver.decrypt_bug_report(&ciphertext, symmetric_key);
 
                 println!(
-                    "Decrypted Bug Report: {:?}",
+                    "Decrypted Bug Report: {}",
                     String::from_utf8(plaintext)
                         .unwrap_or_else(|_| "Failed to convert decrypted report to string".to_string())
                 );
