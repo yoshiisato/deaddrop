@@ -10,6 +10,8 @@ use utils::deserialize_omr_payload;
 
 use log::{debug, error, info, trace, warn};
 
+use colored::*;
+
 pub struct Receiver {
     // Fields for the receiver
     pub public_params: PublicParams,
@@ -48,14 +50,16 @@ impl Receiver {
     pub fn post_info_for_submitters(&self) {
         // Logic to post the bug information for submitters
 
-        info!("Bug Address: {}", self.bug_info.addr);
-        info!("Bug Rules: {}", self.bug_info.rules);
+        info!("Bug Address: {}", self.bug_info.addr.bold().magenta());
+        info!("Bug Rules: {}", self.bug_info.rules.bold().magenta());
 
         let clue_key = self.public_key.pk_clue.clone();
         let enc_key = self.enc_keys.pk_enc.clone();
 
-        info!("Encryption Key: {:?}", enc_key);
-        info!("Clue Key: {}", encode_pk_clue_to_hex(&clue_key));
+        let enc_pk_str = enc_key.to_string();
+
+        info!("Encryption Key: {}", enc_pk_str.bold().magenta());
+        info!("Clue Key: {}", encode_pk_clue_to_hex(&clue_key).bold().magenta());
     }
 
     pub fn decode_digest(&mut self, digest: &Vec<Payload>) -> Result<(), ReceiverError> {
@@ -68,7 +72,8 @@ impl Receiver {
                     self.decoded_paylods_queue.push_back(payload.to_vec());
                 }
 
-                info!("Decoded Payloads added to the internal queue!");
+    
+                info!("{}", ("Decoded Payloads added to the internal queue!".bold().green()).to_string());
                 Ok(())
             }
             _ => {
@@ -110,7 +115,7 @@ impl Receiver {
                         }
 
                         let identifier = identifier.unwrap();
-                        info!("Extracted ID: {}", identifier);
+                        info!("Extracted ID: {}", identifier.bold().magenta());
 
                         return Ok(Some(BugMetadata {
                             bug_id: identifier,
