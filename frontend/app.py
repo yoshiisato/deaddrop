@@ -56,14 +56,14 @@ def submit_bug():
                     bug = BugReport(
                         bugid      = data['bugid'],
                         ciphertext = data['ciphertext'],
-                        omr_payload= json.dumps(data['omr_payload']),
+                        omr_payload= data['omr_payload'],
                         omr_clue   = data['omr_clue'],
                         attestation= data['attestation'],
                     )
                     db.session.add(bug)
                     db.session.commit()
                     flash("Bug report submitted!", "success")
-                    return redirect(url_for('show_list'))
+                    return redirect(url_for('all_bug_reports'))
 
     # example JSON to display
     example_json = {
@@ -163,7 +163,23 @@ def all_bug_reports():
     return render_template("all_bug_reports.html", bugs=all_bugs)
 
 
+@app.route('/bug/<int:bug_id>/delete', methods=['POST'])
+def delete_bug(bug_id):
+    bug = BugReport.query.get_or_404(bug_id)
+    db.session.delete(bug)
+    db.session.commit()
+    return redirect(url_for('all_bug_reports'))
+
+
 @app.route('/entry/<int:entry_id>')
 def entry_detail(entry_id):
     entry = Entry.query.get_or_404(entry_id)
     return render_template('entry_detail.html', entry=entry)
+
+
+@app.route('/entry/<int:entry_id>/delete', methods=['POST'])
+def delete_entry(entry_id):
+    entry = Entry.query.get_or_404(entry_id)
+    db.session.delete(entry)
+    db.session.commit()
+    return redirect(url_for('show_list'))

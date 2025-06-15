@@ -5,14 +5,18 @@
 
     {% if bugs %}
       {% for bug in bugs %}
+      <h2>Bug ID: {{ bug.bugid }}</h2>
         <div class="card mb-3">
           <div class="card-body">
-            <h5 class="card-title">Bug ID: {{ bug.bugid }}</h5>
             <p><strong>Bug Description (encrypted):</strong> <code>{{ bug.ciphertext }}</code></p>
             <p><strong>OMR Payload:</strong> <code>{{ bug.omr_payload }}</code></p>
             <p><strong>OMR Clue:</strong> {{ bug.omr_clue }}</p>
             <p><strong>Attestation:</strong> {{ bug.attestation }}</p>
             <p class="text-muted small">Reported: {{ bug.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            <form method="POST" action="{{ url_for('delete_bug', bug_id=bug.id) }}"
+                  onsubmit="return confirm('Are you sure you want to delete this bug report?');">
+              <button type="submit" class="btn btn-sm btn-danger mt-2">Delete</button>
+            </form>
           </div>
         </div>
       {% endfor %}
