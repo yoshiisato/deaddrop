@@ -19,12 +19,12 @@ contract Attack {
         dao.withdraw(msg.value);
     }
 
-    receive() external payable {
-        // uint256 bal = address(dao).balance;
-        // if (bal >= msg.value) {
-        //     dao.withdraw(msg.value);
-        // }
-    }
+    // receive() external payable {
+    //     // uint256 bal = address(dao).balance;
+    //     // if (bal >= msg.value) {
+    //     //     dao.withdraw(msg.value);
+    //     // }
+    // }
 }
 
 contract BugReport is Test {
