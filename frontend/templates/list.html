@@ -22,9 +22,8 @@
               <p class="card-text mb-1"><strong>Encryption Key:</strong> {{ e.pk_encryption }}</p>
               <p class="card-text mb-1"><strong>Smart contract addr:</strong> {{ e.sc_addr }}</p>
               <p class="card-text mb-3"><strong>Invariants:</strong> {{ e.constraints }}</p>
-              <p class="mt-auto text-muted small">
-                {{ e.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
-              </p>
+              <p class="text-muted small mt-2">{{ e.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+              <a href="{{ url_for('entry_detail', entry_id=e.id) }}" class="btn btn-primary mt-auto">Show Details</a>
             </div>
           </div>
         </div>
