@@ -50,3 +50,10 @@ __pycache__
 deadbug/target
 deadbug/rust_omr/target
 deadbug/Cargo.lock
+
+# OMR
+OMR/openssl
+OMR/palisade-release
+OMR/SEAL
+OMR/ObliviousMessageRetrieval/data
+OMR/ObliviousMessageRetrieval/build

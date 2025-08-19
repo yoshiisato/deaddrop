@@ -1,0 +1,5 @@
+[workspace]
+# fake top-level Cargo workspace for rust analyzer
+members = [
+    "deadbug"
+]
