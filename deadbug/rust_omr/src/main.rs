@@ -82,6 +82,7 @@ fn main()-> Result<(), Box<dyn std::error::Error>> {
     let dt_decode = t0.elapsed();
     let digest_bytes = digest.len() * std::mem::size_of::<u64>();
     println!("    done in {:?} | decoded_digest {:.3} MB", dt_decode, mb_from_bytes(digest_bytes));
+    println!("    decoded_digest length: {}", digest.len());
     flush();
 
     // Evaluate decoded digest (obtain pertinent indices)
